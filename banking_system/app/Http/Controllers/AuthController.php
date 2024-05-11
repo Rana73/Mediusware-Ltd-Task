@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     public function login(Request $request){
-        $request->validate([
+         $request->validate([
             'email' => 'required|email|max:70',
             'password' => 'required|min:6|max:12'
           ]);

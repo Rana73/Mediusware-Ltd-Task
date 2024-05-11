@@ -16,3 +16,5 @@ Route::group(['middleware' => ['auth']] , function(){
     Route::get('dashboard', [AuthController::class, 'dashbboard'])->name('dashboard');
 });
 Route::get('/show', [TransactionController::class, 'show']);
+Route::get('/deposit', [TransactionController::class, 'depositTransactionShow']);
+Route::post('/deposit', [TransactionController::class, 'depositTransaction']);
