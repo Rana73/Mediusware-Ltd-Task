@@ -26,7 +26,8 @@ class WithdrawServiceDetails implements WithdrawService
 
             if($dayName == 'Friday'){   
                 $charge_amount = 0;
-            }else{
+            }
+            else{
                 if($amount > 1000){
                     $charge_percent = 0.015;
                     $without_one_thousand_amount = floatVal($amount) - 1000;
@@ -51,8 +52,16 @@ class WithdrawServiceDetails implements WithdrawService
             }
 
 
-        }else{
+        }
+        else{
             $charge_percent = 0.025;
+            $total_withdraw_amount = Transaction::where('transaction_type','withdraw')
+                                                ->where('user_id',$user_id)
+                                                ->sum('amount');
+
+            if($total_withdraw_amount >= 50000){
+                $charge_percent = 0.015; 
+            }
             $charge_amount = $this->getAmountByPercent($charge_percent,$amount);
         }
         return $charge_amount;
@@ -79,15 +88,26 @@ class WithdrawServiceDetails implements WithdrawService
         try {
 
             $fee =  $this->getInchargeAmount($user_id,$amount);
+            $current_balance = $this->getAvailableBalance($user_id);
+            $withdraw_with_fee = floatVal($amount) + floatVal($fee);
+            
+            if($withdraw_with_fee > $current_balance){
+                return false;
+            }
+            
             $data = [
                 'user_id' => $user_id,
                 'amount' => $amount,
                 'fee' => $fee,
                 'transaction_type' => $transaction_type,
+                'date' => date("y-m-d")
             ];
-            Transaction::create($data);
+          
+            Transaction::insert($data);
+
             $current_balance = $this->getAvailableBalance($user_id);
             User::where('id',$user_id)->update(['balance' => $current_balance]);
+            
             return true;
         } catch (\Throwable $th) {
             return false;

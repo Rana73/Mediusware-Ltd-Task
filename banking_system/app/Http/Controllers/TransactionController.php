@@ -68,9 +68,9 @@ class TransactionController extends Controller
             /*close lock this account info*/
 
             $data = [
+                'user_id' => $user_id,
                 'amount' => $amount,
                 'transaction_type' => 'deposit',
-                'user_id' => $user_id,
                 'fee'     => 0,
                 'date' => date("Y-m-d")
             ];
@@ -116,19 +116,17 @@ class TransactionController extends Controller
     }
 
 
-    public function withdrawalTransaction(){
-        // $request->validate([
-        //     'amount' => 'required|numeric|max:8|min|1',
-        // ]);
+    public function withdrawalTransaction(Request $request){
+        $request->validate([
+            'amount' => 'required|numeric|max:8|min|1',
+        ]);
 
 
         try {
 
             DB::beginTransaction();
-            // $amount = $request->input("amount");
-            $amount = 5770;
-            // $user_id = Auth::user()->id;
-            $user_id = 1;
+            $amount = $request->input("amount");
+            $user_id = Auth::user()->id;
 
             /*lock this account info*/
             $lockedUser = user::where('id',$user_id)->lockForUpdate()->first();
@@ -152,7 +150,6 @@ class TransactionController extends Controller
                 DB::rollBack();
                 return redirect()->back()->with('failed','Something went wrong. please try again later');
             }
-            
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->back()->with('failed','Something went wrong. please try again later');
