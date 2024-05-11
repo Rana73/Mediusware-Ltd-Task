@@ -18,6 +18,6 @@ Route::group(['middleware' => ['auth']] , function(){
     Route::get('/deposit', [TransactionController::class, 'depositTransactionShow']);
     Route::post('/deposit', [TransactionController::class, 'depositTransaction']);
     Route::get('/withdrawal', [TransactionController::class, 'withdrawalTransactionShow']);
-    Route::get('/withdrawal', [TransactionController::class, 'withdrawalTransaction']);
+    Route::post('/withdrawal', [TransactionController::class, 'withdrawalTransaction']);
 });
 
