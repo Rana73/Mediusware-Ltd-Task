@@ -7,9 +7,16 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Services\WithdrawInfo\WithdrawService;
 
 class TransactionController extends Controller
-{
+{   
+    protected $withdraw_info;
+    public function __construct(WithdrawService $withdraw_info)
+    {
+        $this->withdraw_info = $withdraw_info;
+    }
+
     public function show(){
         try {
             $data  = Transaction::with(['user' => function($q){
@@ -105,6 +112,47 @@ class TransactionController extends Controller
             return view('admin.transaction.withdraw_transaction_info',compact('data'));
         } catch (\Throwable $th) {
             return view('admin.error');
+        }
+    }
+
+
+    public function withdrawalTransaction(Request $request){
+        $request->validate([
+            'amount' => 'required|numeric|max:8|min|1',
+        ]);
+
+
+        try {
+
+            DB::beginTransaction();
+            $amount = $request->input("amount");
+            $user_id = Auth::user()->id;
+
+            /*lock this account info*/
+            $lockedUser = user::where('id',$user_id)->lockForUpdate()->first();
+            $lockedTransaction = Transaction::where('user_id',$user_id)->lockForUpdate()->get();
+            /*close lock this account info*/
+            
+            $transaction_type = 'withdraw';
+            $response = false;
+            $check_balance = $this->withdraw_info->getAvailableBalance($user_id);
+            if($check_balance < $amount){
+                return redirect()->back()->with('failed','Insufficient Fund.'); 
+            }else{
+                $response = $this->withdraw_info->withdrawBalance($user_id,$transaction_type,$amount);
+            }
+
+            if($response == true){
+                DB::commit();
+                return redirect()->back()->with('success','Successfullty Deposited and Balance Updated');
+            }else{
+                DB::rollBack();
+                return redirect()->back()->with('failed','Something went wrong. please try again later');
+            }
+            
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->back()->with('failed','Something went wrong. please try again later');
         }
     }
 }

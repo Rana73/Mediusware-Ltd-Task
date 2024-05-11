@@ -19,3 +19,5 @@ Route::get('/show', [TransactionController::class, 'show']);
 Route::get('/deposit', [TransactionController::class, 'depositTransactionShow']);
 Route::post('/deposit', [TransactionController::class, 'depositTransaction']);
 Route::get('/withdrawal', [TransactionController::class, 'withdrawalTransactionShow']);
+
+Route::post('/withdrawal', [TransactionController::class, 'withdrawalTransaction']);
