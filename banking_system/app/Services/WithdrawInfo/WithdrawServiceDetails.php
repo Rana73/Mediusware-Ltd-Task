@@ -35,17 +35,21 @@ class WithdrawServiceDetails implements WithdrawService
 
 
     public function withdrawBalance($user_id,$transaction_type,$amount){
-        $fee =  $this->getInchargeAmount($user_id,$amount);
-        $data = [
-            'user_id' => $user_id,
-            'amount' => $amount,
-            'fee' => $fee,
-            'transaction_type' => $transaction_type,
-        ];
-        Transaction::create($data);
-        $current_balance = $this->getAvailableBalance($user_id);
-        User::where('id',$user_id)->update(['balance' => $current_balance]);
-        return true;        
+        try {
+            $fee =  $this->getInchargeAmount($user_id,$amount);
+            $data = [
+                'user_id' => $user_id,
+                'amount' => $amount,
+                'fee' => $fee,
+                'transaction_type' => $transaction_type,
+            ];
+            Transaction::create($data);
+            $current_balance = $this->getAvailableBalance($user_id);
+            User::where('id',$user_id)->update(['balance' => $current_balance]);
+            return true;
+        } catch (\Throwable $th) {
+            return false;
+        }        
     }
 }
 
