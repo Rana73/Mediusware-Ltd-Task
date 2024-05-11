@@ -116,17 +116,19 @@ class TransactionController extends Controller
     }
 
 
-    public function withdrawalTransaction(Request $request){
-        $request->validate([
-            'amount' => 'required|numeric|max:8|min|1',
-        ]);
+    public function withdrawalTransaction(){
+        // $request->validate([
+        //     'amount' => 'required|numeric|max:8|min|1',
+        // ]);
 
 
         try {
 
             DB::beginTransaction();
-            $amount = $request->input("amount");
-            $user_id = Auth::user()->id;
+            // $amount = $request->input("amount");
+            $amount = 5770;
+            // $user_id = Auth::user()->id;
+            $user_id = 1;
 
             /*lock this account info*/
             $lockedUser = user::where('id',$user_id)->lockForUpdate()->first();
@@ -136,6 +138,7 @@ class TransactionController extends Controller
             $transaction_type = 'withdraw';
             $response = false;
             $check_balance = $this->withdraw_info->getAvailableBalance($user_id);
+   
             if($check_balance < $amount){
                 return redirect()->back()->with('failed','Insufficient Fund.'); 
             }else{
