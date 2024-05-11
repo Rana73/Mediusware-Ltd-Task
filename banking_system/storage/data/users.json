@@ -1,0 +1,4 @@
+[
+    {"name": "Md Rana Miah","account_type": 1,"balance":100000,"email": "mahmudrana21@gmail.com","password": 12345},
+    {"name": "Mediusware Ltd.","account_type": 2,"balance":100000,"email": "contact@mediusware.com","password": 12345}
+]

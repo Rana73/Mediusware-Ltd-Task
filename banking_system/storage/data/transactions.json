@@ -1,0 +1,38 @@
+[
+    {
+         "user_id": 1, "amount": 120000,"fee": 0,"transaction_type": 1,"date": "2024-05-11"
+    },
+    {
+        "user_id": 1, "amount":25550,"fee": 0,"transaction_type": 2,"date": "2024-04-22"
+    },
+    {
+        "user_id": 1, "amount":4550,"fee": 0,"transaction_type": 2,"date": "2024-05-04"
+    },
+    {
+        "user_id": 1,"amount": 4366.99,"fee": 0,"transaction_type": 2,"date": "2024-05-03"
+    },
+    {
+        "user_id": 1, "amount": 604000.99,"fee": 0,"transaction_type": 1,"date": "2024-05-08"
+    },
+    {
+        "user_id": 1, "amount":1550,"fee": 0,"transaction_type": 2, "date": "2024-05-11"
+    },
+    {
+        "user_id": 2, "amount": 120000,"fee": 0,"transaction_type": 1,"date": "2024-05-11"
+   },
+   {
+       "user_id": 2, "amount":25550,"fee": 0,"transaction_type": 2,"date": "2024-04-22"
+   },
+   {
+       "user_id": 2, "amount":4550,"fee": 0,"transaction_type": 2,"date": "2024-05-04"
+   },
+   {
+       "user_id": 2,"amount": 4366.99,"fee": 0,"transaction_type": 2,"date": "2024-05-03"
+   },
+   {
+       "user_id": 2, "amount": 604000.99,"fee": 0,"transaction_type": 1,"date": "2024-05-08"
+   },
+   {
+       "user_id": 2, "amount":1550,"fee": 0,"transaction_type": 2, "date": "2024-05-11"
+   }
+]
