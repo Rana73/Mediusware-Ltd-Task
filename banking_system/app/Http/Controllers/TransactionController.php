@@ -59,7 +59,7 @@ class TransactionController extends Controller
             $lockedUser = user::where('id',$user_id)->lockForUpdate()->first();
             $lockedTransaction = Transaction::where('user_id',$user_id)->lockForUpdate()->get();
             /*close lock this account info*/
-            
+
             $data = [
                 'amount' => $amount,
                 'transaction_type' => 'deposit',
@@ -67,6 +67,7 @@ class TransactionController extends Controller
                 'fee'     => 0,
                 'date' => date("Y-m-d")
             ];
+
             Transaction::insert($data);
 
             $deposit_balance = Transaction::where('user_id',$user_id)
@@ -87,6 +88,23 @@ class TransactionController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->back()->with('failed','Something went wrong. please try again later');
+        }
+    }
+
+
+    public function withdrawalTransactionShow(){
+        try {
+            $data  = Transaction::with(['user' => function($q){
+                        $q->select('id','name');
+                    }])
+                    ->select('id','user_id','amount','transaction_type','fee','date')
+                    ->where('transaction_type', 'withdraw')
+                    ->orderBy('user_id','asc')
+                    ->orderBy('date','asc')
+                    ->get()->toArray();    
+            return view('admin.transaction.withdraw_transaction_info',compact('data'));
+        } catch (\Throwable $th) {
+            return view('admin.error');
         }
     }
 }
